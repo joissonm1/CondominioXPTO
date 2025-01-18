@@ -1,4 +1,8 @@
-package projectofinal;
+package condominio;
+
+
+
+import condominio.Fracao;
 
 public class Lojas extends Fracao {
 

@@ -1,9 +1,11 @@
-package projectofinal;
+package condominio;
 
+import condominio.Fracao;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import utils.InputValidator;
 
 public class Proprietario {
     private String identificador;

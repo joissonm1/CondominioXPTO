@@ -1,5 +1,12 @@
 package projectofinal;
 
+import utils.InputValidator;
+import condominio.Lojas;
+import condominio.Garagens;
+import condominio.Fracao;
+import condominio.Condominio;
+import condominio.Arrecadacao;
+import condominio.Apartamentos;
 import java.time.LocalDate;
 
 public class Main {

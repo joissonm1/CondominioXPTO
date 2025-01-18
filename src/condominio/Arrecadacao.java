@@ -1,4 +1,4 @@
-package projectofinal;
+package condominio;
 
 public class Arrecadacao extends Fracao {
     private boolean temPortaBlindada;

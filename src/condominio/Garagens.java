@@ -1,4 +1,6 @@
-package projectofinal;
+package condominio;
+
+import condominio.Fracao;
 
 public class Garagens extends Fracao {
     private int numViaturas;

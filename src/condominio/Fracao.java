@@ -1,4 +1,4 @@
-package projectofinal;
+package condominio;
 
 public abstract class Fracao {
     private String identificador;

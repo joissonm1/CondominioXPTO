@@ -1,4 +1,4 @@
-package projectofinal;
+package condominio;
 
 public class Apartamentos extends Fracao {
     private String tipo;
