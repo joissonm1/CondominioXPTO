@@ -6,36 +6,48 @@ import java.util.regex.Pattern;
 
 public class InputValidator {
 
-    public static String getInput(Scanner scanner, String prompt) {
+    private static final Scanner scanner = new Scanner(System.in);
+
+    public static String getInput(String prompt) {
         System.out.print(prompt);
         return scanner.nextLine();
     }
 
-    public static int getValidInt(Scanner scanner, String prompt) {
+    public static int getValidInt(String prompt) {
         while (true) {
             System.out.print(prompt);
             try {
-                return Integer.parseInt(scanner.nextLine());
+                int value = Integer.parseInt(scanner.nextLine());
+                if (value > 0) {
+                    return value;
+                } else {
+                    System.out.println("Entrada inválida. Por favor, insira um número inteiro maior que zero.");
+                }
             } catch (NumberFormatException e) {
                 System.out.println("Entrada inválida. Por favor, insira um número inteiro.");
             }
         }
     }
 
-    public static double getValidDouble(Scanner scanner, String prompt) {
+    public static double getValidDouble(String prompt) {
         while (true) {
             System.out.print(prompt);
             try {
-                return Double.parseDouble(scanner.nextLine());
+                double value = Double.parseDouble(scanner.nextLine());
+                if (value >= 0) {
+                    return value;
+                } else {
+                    System.out.println("Entrada inválida. Por favor, insira um número decimal maior ou igual a zero.");
+                }
             } catch (NumberFormatException e) {
                 System.out.println("Entrada inválida. Por favor, insira um número decimal.");
             }
         }
     }
 
-    public static double getValidPercentage(Scanner scanner, String prompt) {
+    public static double getValidPercentage(String prompt) {
         while (true) {
-            double value = getValidDouble(scanner, prompt);
+            double value = getValidDouble(prompt);
             if (value >= 0 && value <= 100) {
                 return value;
             } else {
@@ -44,7 +56,7 @@ public class InputValidator {
         }
     }
 
-    public static String getValidPhoneNumber(Scanner scanner, String prompt) {
+    public static String getValidPhoneNumber(String prompt) {
         while (true) {
             System.out.print(prompt);
             String phoneNumber = scanner.nextLine();
@@ -56,7 +68,7 @@ public class InputValidator {
         }
     }
 
-    public static String getValidEmail(Scanner scanner, String prompt) {
+    public static String getValidEmail(String prompt) {
         while (true) {
             System.out.print(prompt);
             String email = scanner.nextLine();
@@ -68,19 +80,24 @@ public class InputValidator {
         }
     }
 
-    public static LocalDate getValidDate(Scanner scanner, String prompt) {
+    public static LocalDate getValidDate(String prompt) {
         while (true) {
             System.out.print(prompt);
             String dateStr = scanner.nextLine();
             try {
-                return LocalDate.parse(dateStr);
+                LocalDate date = LocalDate.parse(dateStr);
+                if (date.isAfter(LocalDate.now())) {
+                    System.out.println("Data inválida. A data de construção não pode ser no futuro.");
+                } else {
+                    return date;
+                }
             } catch (Exception e) {
                 System.out.println("Data inválida. Use o formato AAAA-MM-DD.");
             }
         }
     }
 
-    public static String getValidFracaoType(Scanner scanner, String prompt) {
+    public static String getValidFracaoType(String prompt) {
         while (true) {
             System.out.print(prompt);
             String tipo = scanner.nextLine().toLowerCase();
@@ -92,7 +109,7 @@ public class InputValidator {
         }
     }
 
-    public static String getValidApartmentType(Scanner scanner, String prompt) {
+    public static String getValidApartmentType(String prompt) {
         while (true) {
             System.out.print(prompt);
             String tipoApt = scanner.nextLine().toUpperCase();
@@ -104,7 +121,7 @@ public class InputValidator {
         }
     }
 
-    public static boolean getValidBoolean(Scanner scanner, String prompt) {
+    public static boolean getValidBoolean(String prompt) {
         while (true) {
             System.out.print(prompt);
             String boolStr = scanner.nextLine().toLowerCase();

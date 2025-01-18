@@ -87,4 +87,5 @@ public class Apartamentos extends Fracao {
         }
         return ((despesasGerais + despesasElevador) * (getPercentagemArea() / 100));
     }
+      
 }

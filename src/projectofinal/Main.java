@@ -1,20 +1,18 @@
 package projectofinal;
 
 import java.time.LocalDate;
-import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
 
         // Solicitar dados do condomínio
-        String moradaCondominio = InputValidator.getInput(scanner, "Morada do Condomínio: ");
-        int identificadorCondominio = InputValidator.getValidInt(scanner, "Identificador do Condomínio: ");
-        double totalDespesasGerais = InputValidator.getValidDouble(scanner, "Total de Despesas Gerais: ");
-        double totalDespesasElevador = InputValidator.getValidDouble(scanner, "Total de Despesas com Elevador: ");
-        LocalDate dataConstrucao = InputValidator.getValidDate(scanner, "Data de Construção (AAAA-MM-DD): ");
-        int maxFracoes = InputValidator.getValidInt(scanner, "Número máximo de frações: ");
+        String moradaCondominio = InputValidator.getInput("Morada do Condomínio: ");
+        int identificadorCondominio = InputValidator.getValidInt( "Identificador do Condomínio: ");
+        double totalDespesasGerais = InputValidator.getValidDouble("Total de Despesas Gerais: ");
+        double totalDespesasElevador = InputValidator.getValidDouble("Total de Despesas com Elevador: ");
+        LocalDate dataConstrucao = InputValidator.getValidDate("Data de Construção (AAAA-MM-DD): ");
+        int maxFracoes = InputValidator.getValidInt("Número máximo de frações: ");
 
         Condominio condominio = new Condominio(moradaCondominio, identificadorCondominio, totalDespesasGerais, totalDespesasElevador, dataConstrucao, maxFracoes);
 
@@ -25,61 +23,57 @@ public class Main {
             System.out.println("3. Verificar Percentagens");
             System.out.println("4. Calcular Soma das Quotas Mensais");
             System.out.println("5. Sair");
-            int escolha = InputValidator.getValidInt(scanner, "Escolha: ");
+            int escolha = InputValidator.getValidInt("Escolha: ");
 
             switch (escolha) {
-                case 1:
-                    adicionarFracaoMenu(scanner, condominio);
-                    break;
-                case 2:
-                    removerFracaoMenu(scanner, condominio);
-                    break;
-                case 3:
-                    System.out.println(condominio.verificarPercentagens() ? "Percentagens corretas" : "Percentagens incorretas");
-                    break;
-                case 4:
-                    System.out.println("Soma das Quotas Mensais: " + condominio.calcularSomaQuotasMensais());
-                    break;
-                case 5:
+                case 1 -> adicionarFracaoMenu(condominio);
+                case 2 -> removerFracaoMenu(condominio);
+                case 3 -> System.out.println(condominio.verificarPercentagens() ? "Percentagens corretas" : "Percentagens incorretas");
+                case 4 -> System.out.println("Soma das Quotas Mensais: " + condominio.calcularSomaQuotasMensais());
+                case 5 -> {
                     return;
-                default:
-                    System.out.println("Escolha inválida");
+                }
+                default -> System.out.println("Escolha inválida");
             }
         }
     }
 
-    private static void adicionarFracaoMenu(Scanner scanner, Condominio condominio) {
+    private static void adicionarFracaoMenu(Condominio condominio) {
+        if (condominio.getListaFracao().size() >= condominio.getMaxFracoes()) {
+            System.out.println("Erro: O número máximo de frações já foi atingido.");
+            return;
+        }
+
         System.out.println("Adicionar Fração:");
-        String tipo = InputValidator.getValidFracaoType(scanner, "Tipo (Apartamento, Loja, Garagem, Arrecadacao): ");
-        String identificador = InputValidator.getInput(scanner, "Identificador: ");
-        double area = InputValidator.getValidDouble(scanner, "Área: ");
-        double percentagemArea = InputValidator.getValidPercentage(scanner, "Percentagem da Área: ");
-        String localizacao = InputValidator.getInput(scanner, "Localização: ");
+        String tipo = InputValidator.getValidFracaoType("Tipo (Apartamento, Loja, Garagem, Arrecadacao): ");
+        String identificador = InputValidator.getInput("Identificador: ");
+        double area = InputValidator.getValidDouble("Área: ");
+        double percentagemArea = InputValidator.getValidPercentage("Percentagem da Área: ");
+        String localizacao = InputValidator.getInput("Localização: ");
 
         Fracao fracao = null;
         switch (tipo) {
-            case "apartamento":
-                String tipoApt = InputValidator.getValidApartmentType(scanner, "Tipo de Apartamento (T0, T1, T2, T3, T4, T5): ");
-                int numCasaDeBanho = InputValidator.getValidInt(scanner, "Número de Casas de Banho: ");
-                int numVaranda = InputValidator.getValidInt(scanner, "Número de Varandas: ");
-                boolean temTerraco = InputValidator.getValidBoolean(scanner, "Tem Terraço (true/false): ");
+            case "apartamento" -> {
+                String tipoApt = InputValidator.getValidApartmentType("Tipo de Apartamento (T0, T1, T2, T3, T4, T5): ");
+                int numCasaDeBanho = InputValidator.getValidInt("Número de Casas de Banho: ");
+                int numVaranda = InputValidator.getValidInt("Número de Varandas: ");
+                boolean temTerraco = InputValidator.getValidBoolean("Tem Terraço (true/false): ");
                 fracao = new Apartamentos(tipoApt, numCasaDeBanho, numVaranda, temTerraco, identificador, area, percentagemArea, localizacao);
-                break;
-            case "loja":
-                fracao = new Lojas(identificador, area, percentagemArea, localizacao);
-                break;
-            case "garagem":
-                int numViaturas = InputValidator.getValidInt(scanner, "Número de Viaturas: ");
-                boolean temLavagem = InputValidator.getValidBoolean(scanner, "Tem Lavagem (true/false): ");
+            }
+            case "loja" -> fracao = new Lojas(identificador, area, percentagemArea, localizacao);
+            case "garagem" -> {
+                int numViaturas = InputValidator.getValidInt("Número de Viaturas: ");
+                boolean temLavagem = InputValidator.getValidBoolean("Tem Lavagem (true/false): ");
                 fracao = new Garagens(numViaturas, temLavagem, identificador, area, percentagemArea, localizacao);
-                break;
-            case "arrecadacao":
-                boolean temPortaBlindada = InputValidator.getValidBoolean(scanner, "Tem Porta Blindada (true/false): ");
+            }
+            case "arrecadacao" -> {
+                boolean temPortaBlindada = InputValidator.getValidBoolean("Tem Porta Blindada (true/false): ");
                 fracao = new Arrecadacao(temPortaBlindada, identificador, area, percentagemArea, localizacao);
-                break;
-            default:
+            }
+            default -> {
                 System.out.println("Tipo de fração inválido.");
                 return;
+            }
         }
 
         try {
@@ -90,9 +84,9 @@ public class Main {
         }
     }
 
-    private static void removerFracaoMenu(Scanner scanner, Condominio condominio) {
+    private static void removerFracaoMenu(Condominio condominio) {
         System.out.println("Remover Fração:");
-        String identificador = InputValidator.getInput(scanner, "Identificador da Fração: ");
+        String identificador = InputValidator.getInput("Identificador da Fração: ");
         try {
             condominio.removerFracao(identificador);
             System.out.println("Fração removida com sucesso.");
