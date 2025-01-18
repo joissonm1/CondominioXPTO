@@ -16,30 +16,48 @@ public class Proprietario {
     private List<Fracao> listaFracao;
 
     public Proprietario(String identificador, String nome, String morada, String telefone, String telemovel, String email, LocalDate dataNascimento) {
-        this.identificador = validarString(identificador, "O identificador não pode estar vazio.");
-        this.nome = validarString(nome, "O nome não pode estar vazio.");
-        this.morada = validarString(morada, "A morada não pode estar vazia.");
-        this.telefone = validarTelefone(telefone, "O telefone não pode estar vazio ou inválido.");
-        this.telemovel = validarTelefone(telemovel, "O telemóvel não pode estar vazio ou inválido.");
-        this.email = validarEmail(email, "O email é inválido ou está vazio.");
-        this.dataNascimento = validarDataNascimento(dataNascimento);
+        if (identificador == null || identificador.trim().isEmpty()) {
+            throw new IllegalArgumentException("O identificador não pode estar vazio.");
+        }
+        if (nome == null || nome.trim().isEmpty()) {
+            throw new IllegalArgumentException("O nome não pode estar vazio.");
+        }
+        if (morada == null || morada.trim().isEmpty()) {
+            throw new IllegalArgumentException("A morada não pode estar vazia.");
+        }
+        if (!InputValidator.isValidPhoneNumber(telefone)) {
+            throw new IllegalArgumentException("O telefone é inválido.");
+        }
+        if (!InputValidator.isValidPhoneNumber(telemovel)) {
+            throw new IllegalArgumentException("O telemóvel é inválido.");
+        }
+        if (!InputValidator.isValidEmail(email)) {
+            throw new IllegalArgumentException("O email é inválido.");
+        }
+        if (dataNascimento == null) {
+            throw new IllegalArgumentException("A data de nascimento não pode estar vazia.");
+        }
+
+        this.identificador = identificador;
+        this.nome = nome;
+        this.morada = morada;
+        this.telefone = telefone;
+        this.telemovel = telemovel;
+        this.email = email;
+        this.dataNascimento = dataNascimento;
         this.listaFracao = new ArrayList<>();
     }
 
-    public LocalDate getDataNascimento() {
-        return dataNascimento;
-    }
-
-    public void setDataNascimento(LocalDate dataNascimento) {
-        this.dataNascimento = validarDataNascimento(dataNascimento);
-    }
-
+    // Getters and setters with validation
     public String getIdentificador() {
         return identificador;
     }
 
     public void setIdentificador(String identificador) {
-        this.identificador = validarString(identificador, "O identificador não pode estar vazio.");
+        if (identificador == null || identificador.trim().isEmpty()) {
+            throw new IllegalArgumentException("O identificador não pode estar vazio.");
+        }
+        this.identificador = identificador;
     }
 
     public String getNome() {
@@ -47,7 +65,10 @@ public class Proprietario {
     }
 
     public void setNome(String nome) {
-        this.nome = validarString(nome, "O nome não pode estar vazio.");
+        if (nome == null || nome.trim().isEmpty()) {
+            throw new IllegalArgumentException("O nome não pode estar vazio.");
+        }
+        this.nome = nome;
     }
 
     public String getMorada() {
@@ -55,7 +76,10 @@ public class Proprietario {
     }
 
     public void setMorada(String morada) {
-        this.morada = validarString(morada, "A morada não pode estar vazia.");
+        if (morada == null || morada.trim().isEmpty()) {
+            throw new IllegalArgumentException("A morada não pode estar vazia.");
+        }
+        this.morada = morada;
     }
 
     public String getTelefone() {
@@ -63,7 +87,10 @@ public class Proprietario {
     }
 
     public void setTelefone(String telefone) {
-        this.telefone = validarTelefone(telefone, "O telefone não pode estar vazio ou inválido.");
+        if (!InputValidator.isValidPhoneNumber(telefone)) {
+            throw new IllegalArgumentException("O telefone é inválido.");
+        }
+        this.telefone = telefone;
     }
 
     public String getTelemovel() {
@@ -71,7 +98,10 @@ public class Proprietario {
     }
 
     public void setTelemovel(String telemovel) {
-        this.telemovel = validarTelefone(telemovel, "O telemóvel não pode estar vazio ou inválido.");
+        if (!InputValidator.isValidPhoneNumber(telemovel)) {
+            throw new IllegalArgumentException("O telemóvel é inválido.");
+        }
+        this.telemovel = telemovel;
     }
 
     public String getEmail() {
@@ -79,79 +109,44 @@ public class Proprietario {
     }
 
     public void setEmail(String email) {
-        this.email = validarEmail(email, "O email é inválido ou está vazio.");
+        if (!InputValidator.isValidEmail(email)) {
+            throw new IllegalArgumentException("O email é inválido.");
+        }
+        this.email = email;
+    }
+
+    public LocalDate getDataNascimento() {
+        return dataNascimento;
+    }
+
+    public void setDataNascimento(LocalDate dataNascimento) {
+        if (dataNascimento == null) {
+            throw new IllegalArgumentException("A data de nascimento não pode estar vazia.");
+        }
+        this.dataNascimento = dataNascimento;
     }
 
     public List<Fracao> getListaFracao() {
-        return Collections.unmodifiableList(listaFracao); // Lista imutável para proteger o estado interno
-    }
-
-    public void setListaFracao(List<Fracao> listaFracao) {
-        if (listaFracao == null) {
-            throw new IllegalArgumentException("A lista de frações não pode ser nula.");
-        }
-        this.listaFracao = new ArrayList<>(listaFracao);
+        return Collections.unmodifiableList(listaFracao);
     }
 
     public void adicionarFracao(Fracao fracao) {
         if (fracao == null) {
             throw new IllegalArgumentException("A fração não pode ser nula.");
         }
-        this.listaFracao.add(fracao);
+        listaFracao.add(fracao);
     }
 
     public void removerFracao(Fracao fracao) {
         if (fracao == null) {
             throw new IllegalArgumentException("A fração não pode ser nula.");
         }
-        if (!this.listaFracao.contains(fracao)) {
-            throw new IllegalArgumentException("A fração não está associada a este proprietário.");
-        }
-        this.listaFracao.remove(fracao);
+        listaFracao.remove(fracao);
     }
 
     public void listarFracao() {
-        if (listaFracao.isEmpty()) {
-            System.out.println("Lista de frações do proprietário vazia!");
-        } else {
-            System.out.println("\n═══ Frações do Proprietário " + nome + " ═══");
-            System.out.println();
-            for (Fracao fracao : listaFracao) {
-                System.out.println("Identificador: " + fracao.getIdentificador());
-                System.out.println("Área: " + fracao.getArea());
-                System.out.println("Percentagem: " + fracao.getPercentagemArea());
-                System.out.println("Localização: " + fracao.getLocalizacao());
-                System.out.println("════════════════════════════════════════════");
-            }
+        for (Fracao fracao : listaFracao) {
+            System.out.println(fracao.getIdentificador());
         }
-    }
-
-    // Métodos auxiliares de validação
-    private String validarString(String valor, String mensagemErro) {
-        if (valor == null || valor.trim().isEmpty()) {
-            throw new IllegalArgumentException(mensagemErro);
-        }
-        return valor.trim();
-    }
-
-    private String validarTelefone(String telefone, String mensagemErro) {
-        if (telefone == null || !telefone.matches("\\d{9,15}")) {
-            throw new IllegalArgumentException(mensagemErro);
-        }
-        return telefone;
-    }
-
-    private String validarEmail(String email, String mensagemErro) {
-        if (email == null || !email.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$")) {
-            throw new IllegalArgumentException(mensagemErro);
-        }
-        return email;
-    }
-
-    private LocalDate validarDataNascimento(LocalDate dataNascimento) {
-        if (dataNascimento == null || dataNascimento.isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("A data de nascimento é inválida.");
-        }
-        return dataNascimento;
     }
 }

@@ -1,14 +1,12 @@
 package projectofinal;
 
-public abstract class Fracao
-{
+public abstract class Fracao {
     private String identificador;
     private double area;
     private double percentagemArea;
     private String localizacao;
 
     public Fracao(String identificador, double area, double percentagemArea, String localizacao) {
-        
         if (identificador == null || identificador.trim().isEmpty()) {
             throw new IllegalArgumentException("O identificador não pode estar vazio.");
         }
@@ -66,7 +64,7 @@ public abstract class Fracao
     }
 
     public void setPercentagemArea(double percentagemArea) {
-         if (percentagemArea < 0 || percentagemArea > 100) {
+        if (percentagemArea < 0 || percentagemArea > 100) {
             throw new IllegalArgumentException("A percentagem deve estar entre 0 e 100.");
         }
         this.percentagemArea = percentagemArea;
@@ -74,5 +72,4 @@ public abstract class Fracao
     
     public abstract double calcularPercentagem(double areaTotal);
     public abstract double calcularQuotaMensal(double despesasGerais, double despesasElevador);
-    
 }

@@ -11,10 +11,10 @@ public class Condominio {
     private double totalDespesasElevador;
     private LocalDate dataConstrucao;
     private int numeroFracoes;
+    private int maxFracoes;
     private List<Fracao> listaFracao;
 
-    public Condominio(String morada, int identificador, double totalDespesasGerais, double totalDespesasElevador, LocalDate dataConstrucao, int numeroFracoes) {
-        
+    public Condominio(String morada, int identificador, double totalDespesasGerais, double totalDespesasElevador, LocalDate dataConstrucao, int maxFracoes) {
         if (morada == null || morada.trim().isEmpty()) {
             throw new IllegalArgumentException("A morada não pode estar vazia.");
         }
@@ -28,26 +28,24 @@ public class Condominio {
             throw new IllegalArgumentException("As despesas do elevador não podem ser negativas.");
         }
         if (dataConstrucao == null) {
-            throw new IllegalArgumentException("A data de construção não pode ser nula.");
+            throw new IllegalArgumentException("A data de construção não pode estar vazia.");
         }
         if (dataConstrucao.isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("A data de construção não pode ser futura.");
+            throw new IllegalArgumentException("A data de construção não pode ser no futuro.");
         }
-        if (numeroFracoes <= 0) {
-            throw new IllegalArgumentException("O número de frações deve ser maior que zero.");
+        if (maxFracoes <= 0) {
+            throw new IllegalArgumentException("O número máximo de frações deve ser maior que zero.");
         }
-        
+
         this.morada = morada;
         this.identificador = identificador;
         this.totalDespesasGerais = totalDespesasGerais;
         this.totalDespesasElevador = totalDespesasElevador;
         this.dataConstrucao = dataConstrucao;
-        this.numeroFracoes = numeroFracoes;
+        this.maxFracoes = maxFracoes;
         this.listaFracao = new ArrayList<>();
-    }    
+    }
 
-    // gets and sets
-    
     public String getMorada() {
         return morada;
     }
@@ -64,7 +62,7 @@ public class Condominio {
     }
 
     public void setIdentificador(int identificador) {
-         if (identificador <= 0) {
+        if (identificador <= 0) {
             throw new IllegalArgumentException("O identificador deve ser maior que zero.");
         }
         this.identificador = identificador;
@@ -75,7 +73,7 @@ public class Condominio {
     }
 
     public void setTotalDespesasGerais(double totalDespesasGerais) {
-         if (totalDespesasGerais < 0) {
+        if (totalDespesasGerais < 0) {
             throw new IllegalArgumentException("As despesas gerais não podem ser negativas.");
         }
         this.totalDespesasGerais = totalDespesasGerais;
@@ -98,112 +96,75 @@ public class Condominio {
 
     public void setDataConstrucao(LocalDate dataConstrucao) {
         if (dataConstrucao == null) {
-            throw new IllegalArgumentException("A data de construção não pode ser nula.");
+            throw new IllegalArgumentException("A data de construção não pode estar vazia.");
         }
         if (dataConstrucao.isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("A data de construção não pode ser futura.");
+            throw new IllegalArgumentException("A data de construção não pode ser no futuro.");
         }
         this.dataConstrucao = dataConstrucao;
     }
 
     public int getNumeroFracoes() {
-        return numeroFracoes;
+        return listaFracao.size();
     }
 
-    public void setNumeroFracoes(int numeroFracoes) {
-        if (numeroFracoes <= 0) {
-            throw new IllegalArgumentException("O número de frações deve ser maior que zero.");
-        }
-        this.numeroFracoes = numeroFracoes;
+    public int getMaxFracoes() {
+        return maxFracoes;
     }
 
-    public List<Fracao> getFracao() {
+    public List<Fracao> getListaFracao() {
         return listaFracao;
     }
 
-    public void setFracao(List<Fracao> listaFracao) {
+    public void setListaFracao(List<Fracao> listaFracao) {
         if (listaFracao == null) {
             throw new IllegalArgumentException("A lista de frações não pode ser nula.");
         }
         this.listaFracao = listaFracao;
     }
-    
-    // funcoes da class condominio
 
-    public void adicionarFracao(Fracao fracao) // metodo repetido em apartamento com o mesmo comportamento 
-    {
+    public void adicionarFracao(Fracao fracao) {
         if (fracao == null) {
             throw new IllegalArgumentException("A fração não pode ser nula.");
         }
-        if (condominioEstaCompleto()) {
+        if (listaFracao.size() >= maxFracoes) {
             throw new IllegalStateException("O condomínio já atingiu o número máximo de frações.");
         }
-        this.listaFracao.add(fracao);
+        listaFracao.add(fracao);
+        recalcularPercentagens();
     }
-    
-    public void removerFracao(String identificador) // elimina com base o id da frcao
-    {
-        if (identificador == null || identificador.trim().isEmpty()) {
-            throw new IllegalArgumentException("O identificador não pode estar vazio.");
+
+    public void removerFracao(String identificador) {
+        listaFracao.removeIf(fracao -> fracao.getIdentificador().equals(identificador));
+        recalcularPercentagens();
+    }
+
+    private void recalcularPercentagens() {
+        double areaTotal = listaFracao.stream().mapToDouble(Fracao::getArea).sum();
+        for (Fracao fracao : listaFracao) {
+            fracao.setPercentagemArea((fracao.getArea() / areaTotal) * 100);
         }
-        listaFracao.removeIf(listaFracao -> listaFracao.getIdentificador().equals(identificador));
     }
-    
-    public double calcularDespesasTotais() // calculo do valor total das despesas
-    {
-        return totalDespesasGerais + totalDespesasElevador;
+
+    public boolean verificarPercentagens() {
+        double somaPercentagens = listaFracao.stream().mapToDouble(Fracao::getPercentagemArea).sum();
+        return Math.abs(somaPercentagens - 100.0) < 0.001;
     }
-    
-    public double calcularDespesasFracao(Fracao fracao) // calculo da despesa por fracao
-    {
-        if (fracao == null) {
-            throw new IllegalArgumentException("A fração não pode ser nula.");
-        }
-        return (fracao.getPercentagemArea() / 100) * calcularDespesasTotais(); 
+
+    public double calcularSomaQuotasMensais() {
+        return listaFracao.stream().mapToDouble(fracao -> fracao.calcularQuotaMensal(totalDespesasGerais, totalDespesasElevador)).sum();
     }
-    
-    public boolean condominioEstaCompleto() // verifica se o numero de fracoes do condominio esta completo
-    {
-        return listaFracao.size() >= numeroFracoes;
-    }
-    
-    // altera os dados do condominio
-    public void alterarDadosCondominio(String novaMorada, double novaDespesasGerais, double novaDespesasElevadores, int novoNumFracoes)
-    {
-        this.morada = novaMorada;
-        this.totalDespesasGerais = novaDespesasGerais;
-        this.totalDespesasElevador = novaDespesasElevadores;
-        this.numeroFracoes = novoNumFracoes;
-    }
-    
-    public void infoCondominio() // mostra as informacoes do condominio
-    {
-        System.out.println("##############################");
-        System.out.println("Identificador: " + identificador);
+
+    public void infoCondominio() {
         System.out.println("Morada: " + morada);
+        System.out.println("Identificador: " + identificador);
+        System.out.println("Total Despesas Gerais: " + totalDespesasGerais);
+        System.out.println("Total Despesas Elevador: " + totalDespesasElevador);
         System.out.println("Data de Construção: " + dataConstrucao);
-        System.out.println("Despesas Gerais: " + totalDespesasGerais);
-        System.out.println("Despesas do Elevador: " + totalDespesasElevador);
-        System.out.println("Numero de Frações: " + numeroFracoes);
-        System.out.println("Frações do Condominio: ");
-        
-        if (listaFracao.isEmpty()) //  funcao identica a do proprietario (funcao repetida) -- comeca aqui
-        {
-            System.out.println("O Condomio não possui Frações!");
+        System.out.println("Número de Frações: " + getNumeroFracoes() + "/" + maxFracoes);
+        System.out.println("Lista de Frações: ");
+        for (Fracao fracao : listaFracao) {
+            System.out.println(" - " + fracao.getIdentificador());
         }
-        else
-        {
-            System.out.println();
-            for (Fracao fracao : listaFracao)
-            {
-                System.out.println("Identificador: " + fracao.getIdentificador());
-                System.out.println("Area: " + fracao.getArea());
-                System.out.println("Percentagem: " + fracao.getPercentagemArea());
-                System.out.println("Localizacao: " + fracao.getLocalizacao());
-                System.out.println();
-            }
-        } // termina aqui a funcao
-        System.out.println("##############################");
     }
-    
 }

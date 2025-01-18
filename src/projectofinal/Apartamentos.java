@@ -1,7 +1,6 @@
 package projectofinal;
 
-public class Apartamentos extends Fracao
-{
+public class Apartamentos extends Fracao {
     private String tipo;
     private int numCasaDeBanho;
     private int numVaranda;
@@ -29,15 +28,12 @@ public class Apartamentos extends Fracao
         this.temTerraco = temTerraco;
     }
 
-    public String getTipo()
-    {
+    public String getTipo() {
         return tipo;
     }
 
-    public void setTipo(String tipo)
-    {
-        if (tipo == null || tipo.trim().isEmpty())
-        {
+    public void setTipo(String tipo) {
+        if (tipo == null || tipo.trim().isEmpty()) {
             throw new IllegalArgumentException("O tipo do apartamento não pode ser vazio.");
         }
         this.tipo = tipo;
@@ -48,9 +44,8 @@ public class Apartamentos extends Fracao
     }
 
     public void setNumCasaDeBanho(int numCasaDeBanho) {
-        if (numCasaDeBanho < 0)
-        {
-           throw new IllegalArgumentException("O número de casas de banho não pode ser negativo.");
+        if (numCasaDeBanho < 0) {
+            throw new IllegalArgumentException("O número de casas de banho não pode ser negativo.");
         }
         this.numCasaDeBanho = numCasaDeBanho;
     }
@@ -60,9 +55,8 @@ public class Apartamentos extends Fracao
     }
 
     public void setNumVaranda(int numVaranda) {
-        if (numVaranda < 0)
-        {
-           throw new IllegalArgumentException("O número de varandas não pode ser negativo.");
+        if (numVaranda < 0) {
+            throw new IllegalArgumentException("O número de varandas não pode ser negativo.");
         }
         this.numVaranda = numVaranda;
     }
@@ -76,25 +70,21 @@ public class Apartamentos extends Fracao
     }
     
     @Override
-    public double calcularPercentagem(double areaTotal)
-    {
-       if (areaTotal <= 0)
-       {
+    public double calcularPercentagem(double areaTotal) {
+        if (areaTotal <= 0) {
             throw new IllegalArgumentException("A área total deve ser maior que zero.");
-       }
-       return ((this.getArea() / areaTotal) * 100);
+        }
+        return ((this.getArea() / areaTotal) * 100);
     }
 
     @Override
-    public double calcularQuotaMensal(double despesasGerais, double despesasElevador)
-    {
+    public double calcularQuotaMensal(double despesasGerais, double despesasElevador) {
         if (despesasGerais < 0) {
             throw new IllegalArgumentException("As despesas gerais não podem ser negativas.");
         }
         if (despesasElevador < 0) {
             throw new IllegalArgumentException("As despesas do elevador não podem ser negativas.");
         }
-        return((despesasGerais + despesasElevador) * (getPercentagemArea() / 100));
+        return ((despesasGerais + despesasElevador) * (getPercentagemArea() / 100));
     }
-    
 }
