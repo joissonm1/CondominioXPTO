@@ -1,15 +1,20 @@
-//Classe para validação de entradas do usuário
+package utils;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.Scanner;
+import java.util.regex.Pattern;
+
 public class InputValidator {
 
     private static final Scanner scanner = new Scanner(System.in);
 
-    //Solicita uma entrada do usuário com uma mensagem de prompt
     public static String getInput(String prompt) {
         System.out.print(prompt);
         return scanner.nextLine();
     }
 
-    //Solicita e valida um número inteiro positivo
     public static int getValidInt(String prompt) {
         while (true) {
             System.out.print(prompt);
@@ -26,13 +31,12 @@ public class InputValidator {
         }
     }
 
-    //Solicita e valida um número decimal não negativo
     public static double getValidDouble(String prompt) {
         while (true) {
             System.out.print(prompt);
             try {
                 double value = Double.parseDouble(scanner.nextLine());
-                if (value >= 0) { /
+                if (value >= 0) {
                     return value;
                 } else {
                     System.out.println("Entrada inválida. Por favor, insira um número decimal maior ou igual a zero.");
@@ -43,7 +47,6 @@ public class InputValidator {
         }
     }
 
-    //Solicita e valida uma percentagem entre 0 e 100
     public static double getValidPercentage(String prompt) {
         while (true) {
             double value = getValidDouble(prompt);
@@ -55,7 +58,6 @@ public class InputValidator {
         }
     }
 
-    //Solicita e valida um número de telefone no formato certo
     public static String getValidPhoneNumber(String prompt) {
         while (true) {
             System.out.print(prompt);
@@ -68,7 +70,6 @@ public class InputValidator {
         }
     }
 
-    //Solicita e valida um endereço de email no formato certo
     public static String getValidEmail(String prompt) {
         while (true) {
             System.out.print(prompt);
@@ -81,25 +82,68 @@ public class InputValidator {
         }
     }
 
-    //Solicita e valida uma data no formato AAAA-MM-DD, garantindo que não seja uma data no futuro
-    public static LocalDate getValidDate(String prompt) {
-        while (true) {
-            System.out.print(prompt);
-            String dateStr = scanner.nextLine();
-            try {
-                LocalDate date = LocalDate.parse(dateStr);
-                if (date.isAfter(LocalDate.now())) {
-                    System.out.println("Data inválida. A data de construção não pode ser no futuro.");
-                } else {
-                    return date;
-                }
-            } catch (Exception e) {
-                System.out.println("Data inválida. Use o formato AAAA-MM-DD.");
+public static LocalDate getValidNascimentoData(String prompt) {
+    DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
+    DateTimeFormatter displayFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    
+    while (true) {
+        System.out.print(prompt);
+        String dateStr = scanner.nextLine().trim();
+        
+        try {
+            LocalDate date = LocalDate.parse(dateStr, formatter);
+            LocalDate hoje = LocalDate.now();
+            
+            // Validação para data de nascimento (mínimo 18 anos)
+            LocalDate dataMinimaNascimento = hoje.minusYears(18);
+            if (date.isAfter(dataMinimaNascimento)) {
+                System.out.println("Erro: Data de nascimento deve ser anterior a " + 
+                    dataMinimaNascimento.format(displayFormatter));
+                continue;
             }
+            
+            // Validação para idade máxima (120 anos)
+            LocalDate dataMaximaAntiga = hoje.minusYears(120);
+            if (date.isBefore(dataMaximaAntiga)) {
+                System.out.println("Erro: Data de nascimento não pode ser anterior a " + 
+                    dataMaximaAntiga.format(displayFormatter));
+                continue;
+            }
+            
+            return date;
+        } catch (DateTimeParseException e) {
+            System.out.println("Formato inválido! Use: AAAA-MM-DD (Ex: 2000-05-30)");
         }
     }
+}
 
-    // Solicita e valida o tipo de fração (apartamento, loja, garagem ou arrecadação)
+public static LocalDate getValidConstrucaoData(String prompt) {
+    DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
+    DateTimeFormatter displayFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    
+    while (true) {
+        System.out.print(prompt);
+        String dateStr = scanner.nextLine().trim();
+        
+        try {
+            LocalDate date = LocalDate.parse(dateStr, formatter);
+            LocalDate hoje = LocalDate.now();
+            
+            // Validação: a data de construção deve ser no futuro (apenas datas após hoje são permitidas)
+            if (!date.isAfter(hoje)) {
+                System.out.println("Erro: Data de construção tem que ser no futuro. Por favor, insira uma data após " +
+                    hoje.format(displayFormatter));
+                continue;
+            }
+            
+            return date;
+        } catch (DateTimeParseException e) {
+            System.out.println("Formato inválido! Use: AAAA-MM-DD (Ex: 2000-05-30)");
+        }
+    }
+}
+
+
     public static String getValidFracaoType(String prompt) {
         while (true) {
             System.out.print(prompt);
@@ -112,7 +156,6 @@ public class InputValidator {
         }
     }
 
-    // Solicita e valida o tipo de apartamento (T0 a T5)
     public static String getValidApartmentType(String prompt) {
         while (true) {
             System.out.print(prompt);
@@ -125,7 +168,6 @@ public class InputValidator {
         }
     }
 
-    // Solicita e valida um valor booleano (true ou false)
     public static boolean getValidBoolean(String prompt) {
         while (true) {
             System.out.print(prompt);
@@ -138,12 +180,10 @@ public class InputValidator {
         }
     }
 
-    // Verifica se o número de telefone está no formato correto (começa com 9 e tem 9 dígitos)
     public static boolean isValidPhoneNumber(String phoneNumber) {
         return phoneNumber != null && phoneNumber.matches("^9\\d{8}$");
     }
 
-    // Verifica se o email está no formato correto
     public static boolean isValidEmail(String email) {
         return email != null && Pattern.compile("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$").matcher(email).matches();
     }

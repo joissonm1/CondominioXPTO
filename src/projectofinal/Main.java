@@ -98,7 +98,7 @@ public class Main {
             int identificador = InputValidator.getValidInt("Digite o identificador do condomínio: ");
             double despesasGerais = InputValidator.getValidDouble("Digite o valor das despesas gerais: ");
             double despesasElevador = InputValidator.getValidDouble("Digite o valor das despesas com elevador: ");
-            LocalDate dataConstrucao = InputValidator.getValidDate("Digite a data de construção (AAAA-MM-DD): ");
+            LocalDate dataConstrucao = InputValidator.getValidConstrucaoData("Digite a data de construção (AAAA-MM-DD): ");
             int maxFracoes = InputValidator.getValidInt("Digite o número máximo de frações: ");
 
             Condominio condominio = new Condominio(morada, identificador, despesasGerais,
@@ -250,89 +250,99 @@ public class Main {
             }
         }
     }
+    
+   private static void adicionarFracao() {
+    if (condominios.isEmpty()) {
+        System.out.println("Não existem condomínios cadastrados! Crie um condomínio primeiro.");
+        return;
+    }
 
-    private static void adicionarFracao() {
-        if (condominios.isEmpty()) {
-            System.out.println("Não existem condomínios cadastrados! Crie um condomínio primeiro.");
-            return;
-        }
-
-        listarCondominios();
-        int idCond = InputValidator.getValidInt("Digite o identificador do condomínio para adicionar a fração: ");
-        
-        Condominio cond = null;
-        for (Condominio c : condominios) {
-            if (c.getIdentificador() == idCond) {
-                cond = c;
-                break;
-            }
-        }
-
-        if (cond == null) {
-            System.out.println("Condomínio não encontrado!");
-            return;
-        }
-
-        System.out.println("\nTipos de Fração:");
-        System.out.println("1. Apartamento");
-        System.out.println("2. Loja");
-        System.out.println("3. Garagem");
-        System.out.println("4. Arrecadação");
-
-        int tipoFracao = InputValidator.getValidInt("Escolha o tipo de fração: ");
-        
-        String identificador = InputValidator.getInput("Digite o identificador da fração: ");
-        double area = InputValidator.getValidDouble("Digite a área da fração: ");
-        String localizacao = InputValidator.getInput("Digite a localização da fração: ");
-
-        try {
-            Fracao novaFracao = null;
-
-            switch (tipoFracao) {
-                case 1 -> {
-                    // Apartamento
-                    String tipoApt = InputValidator.getValidApartmentType("Digite o tipo do apartamento (T0-T5): ");
-                    int numCasaBanho = InputValidator.getValidInt("Digite o número de casas de banho: ");
-                    int numVaranda = InputValidator.getValidInt("Digite o número de varandas: ");
-                    boolean temTerraco = InputValidator.getValidBoolean("Tem terraço? (true/false): ");
-                    
-                    novaFracao = new Apartamentos(tipoApt, numCasaBanho, numVaranda, temTerraco,
-                            identificador, area, 0.0, localizacao);
-                }
-
-                case 2 -> // Loja
-                    novaFracao = new Lojas(identificador, area, 0.0, localizacao);
-
-                case 3 -> {
-                    // Garagem
-                    int numViaturas = InputValidator.getValidInt("Digite o número de viaturas: ");
-                    boolean temLavagem = InputValidator.getValidBoolean("Tem serviço de lavagem? (true/false): ");
-                    
-                    novaFracao = new Garagens(numViaturas, temLavagem, identificador,
-                            area, 0.0, localizacao);
-                }
-
-                case 4 -> {
-                    // Arrecadação
-                    boolean temPortaBlindada = InputValidator.getValidBoolean("Tem porta blindada? (true/false): ");
-                    
-                    novaFracao = new Arrecadacao(temPortaBlindada, identificador,
-                            area, 0.0, localizacao);
-                }
-
-                default -> {
-                    System.out.println("Tipo de fração inválido!");
-                    return;
-                }
-            }
-
-            cond.adicionarFracao(novaFracao);
-            System.out.println("Fração adicionada com sucesso!");
-            
-        } catch (IllegalArgumentException e) {
-            System.out.println("Erro ao adicionar fração: " + e.getMessage());
+    listarCondominios();
+    int idCond = InputValidator.getValidInt("Digite o identificador do condomínio para adicionar a fração: ");
+    
+    Condominio cond = null;
+    for (Condominio c : condominios) {
+        if (c.getIdentificador() == idCond) {
+            cond = c;
+            break;
         }
     }
+
+    if (cond == null) {
+        System.out.println("Condomínio não encontrado!");
+        return;
+    }
+
+    // Verificação do limite de frações ANTES de coletar dados
+    if (cond.getNumeroFracoes() >= cond.getMaxFracoes()) {
+        System.out.println("\nErro: Este condomínio já atingiu o limite máximo de " + 
+                         cond.getMaxFracoes() + " frações!");
+        return;
+    }
+
+    System.out.println("\nTipos de Fração:");
+    System.out.println("1. Apartamento");
+    System.out.println("2. Loja");
+    System.out.println("3. Garagem");
+    System.out.println("4. Arrecadação");
+
+    int tipoFracao = InputValidator.getValidInt("Escolha o tipo de fração: ");
+    
+    String identificador = InputValidator.getInput("Digite o identificador da fração: ");
+    double area = InputValidator.getValidDouble("Digite a área da fração: ");
+    String localizacao = InputValidator.getInput("Digite a localização da fração: ");
+
+    try {
+        Fracao novaFracao = null;
+
+        switch (tipoFracao) {
+            case 1 -> {
+                String tipoApt = InputValidator.getValidApartmentType("Digite o tipo do apartamento (T0-T5): ");
+                int numCasaBanho = InputValidator.getValidInt("Digite o número de casas de banho: ");
+                int numVaranda = InputValidator.getValidInt("Digite o número de varandas: ");
+                boolean temTerraco = InputValidator.getValidBoolean("Tem terraço? (true/false): ");
+                
+                novaFracao = new Apartamentos(tipoApt, numCasaBanho, numVaranda, temTerraco,
+                        identificador, area, 0.0, localizacao);
+            }
+
+            case 2 -> // Loja
+                novaFracao = new Lojas(identificador, area, 0.0, localizacao);
+
+            case 3 -> {
+                int numViaturas = InputValidator.getValidInt("Digite o número de viaturas: ");
+                boolean temLavagem = InputValidator.getValidBoolean("Tem serviço de lavagem? (true/false): ");
+                
+                novaFracao = new Garagens(numViaturas, temLavagem, identificador,
+                        area, 0.0, localizacao);
+            }
+
+            case 4 -> {
+                boolean temPortaBlindada = InputValidator.getValidBoolean("Tem porta blindada? (true/false): ");
+                
+                novaFracao = new Arrecadacao(temPortaBlindada, identificador,
+                        area, 0.0, localizacao);
+            }
+
+            default -> {
+                System.out.println("Tipo de fração inválido!");
+                return;
+            }
+        }
+
+        // Verificação redundante para segurança
+        if (cond.getNumeroFracoes() < cond.getMaxFracoes()) {
+            cond.adicionarFracao(novaFracao);
+            System.out.println("Fração adicionada com sucesso!");
+        } else {
+            System.out.println("Erro: Limite de frações foi atingido durante o processo!");
+        }
+        
+    } catch (IllegalArgumentException e) {
+        System.out.println("Erro ao adicionar fração: " + e.getMessage());
+    }
+}
+
 
     private static void removerFracao() {
         if (condominios.isEmpty()) {
@@ -499,7 +509,7 @@ public class Main {
             String telefone = InputValidator.getValidPhoneNumber("Digite o telefone do proprietário: ");
             String telemovel = InputValidator.getValidPhoneNumber("Digite o telemóvel do proprietário: ");
             String email = InputValidator.getValidEmail("Digite o email do proprietário: ");
-            LocalDate dataNascimento = InputValidator.getValidDate("Digite a data de nascimento (AAAA-MM-DD): ");
+            LocalDate dataNascimento = InputValidator.getValidNascimentoData("Digite a data de nascimento (AAAA-MM-DD): ");
 
             Proprietario proprietario = new Proprietario(identificador, nome, morada, telefone,
                                                        telemovel, email, dataNascimento);
