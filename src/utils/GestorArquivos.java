@@ -23,6 +23,7 @@ public class GestorArquivos {
         carregarProprietarios(proprietarios);
     }
 
+    // Método para salvar a lista de condomínios em um arquivo
     private static void salvarCondominios(List<Condominio> condominios) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(CONDOMINIOS_FILE))) {
             for (Condominio cond : condominios) {
@@ -47,9 +48,9 @@ public class GestorArquivos {
         }
     }
 
+    // Método para salvar uma fração em um arquivo
     private static void salvarFracao(PrintWriter writer, Fracao fracao) {
-        if (fracao instanceof Apartamentos) {
-            Apartamentos apt = (Apartamentos) fracao;
+        if (fracao instanceof Apartamentos apt) {
             writer.println("APARTAMENTO");
             writer.println(apt.getIdentificador());
             writer.println(apt.getArea());
@@ -59,15 +60,13 @@ public class GestorArquivos {
             writer.println(apt.getNumCasaDeBanho());
             writer.println(apt.getNumVaranda());
             writer.println(apt.isTemTerraco());
-        } else if (fracao instanceof Lojas) {
-            Lojas loja = (Lojas) fracao;
+        } else if (fracao instanceof Lojas loja) {
             writer.println("LOJA");
             writer.println(loja.getIdentificador());
             writer.println(loja.getArea());
             writer.println(loja.getPercentagemArea());
             writer.println(loja.getLocalizacao());
-        } else if (fracao instanceof Garagens) {
-            Garagens garagem = (Garagens) fracao;
+        } else if (fracao instanceof Garagens garagem) {
             writer.println("GARAGEM");
             writer.println(garagem.getIdentificador());
             writer.println(garagem.getArea());
@@ -75,8 +74,7 @@ public class GestorArquivos {
             writer.println(garagem.getLocalizacao());
             writer.println(garagem.getNumViaturas());
             writer.println(garagem.isTemLavagem());
-        } else if (fracao instanceof Arrecadacao) {
-            Arrecadacao arr = (Arrecadacao) fracao;
+        } else if (fracao instanceof Arrecadacao arr) {
             writer.println("ARRECADACAO");
             writer.println(arr.getIdentificador());
             writer.println(arr.getArea());
@@ -86,6 +84,7 @@ public class GestorArquivos {
         }
     }
 
+    // Método para salvar a lista de proprietários em um arquivo
     private static void salvarProprietarios(List<Proprietario> proprietarios) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(PROPRIETARIOS_FILE))) {
             for (Proprietario prop : proprietarios) {
@@ -111,6 +110,7 @@ public class GestorArquivos {
         }
     }
 
+    // Método para carregar a lista de condomínios de um arquivo
     private static void carregarCondominios(List<Condominio> condominios) {
         try (BufferedReader reader = new BufferedReader(new FileReader(CONDOMINIOS_FILE))) {
             String linha;
@@ -124,6 +124,7 @@ public class GestorArquivos {
         }
     }
 
+    // Método para carregar um condomínio de um arquivo
     private static void carregarCondominio(BufferedReader reader, List<Condominio> condominios) throws IOException {
         int identificador = Integer.parseInt(reader.readLine());
         String morada = reader.readLine();
@@ -146,9 +147,10 @@ public class GestorArquivos {
         }
 
         condominios.add(cond);
-        reader.readLine(); // Ler FIM_CONDOMINIO
+        reader.readLine();
     }
 
+    // Método para carregar uma fração de um arquivo
     private static Fracao carregarFracao(BufferedReader reader) throws IOException {
         String tipo = reader.readLine();
         String identificador = reader.readLine();
@@ -157,34 +159,40 @@ public class GestorArquivos {
         String localizacao = reader.readLine();
 
         switch (tipo) {
-            case "APARTAMENTO":
+            case "APARTAMENTO" -> {
                 String tipoApt = reader.readLine();
                 int numCasaBanho = Integer.parseInt(reader.readLine());
                 int numVaranda = Integer.parseInt(reader.readLine());
                 boolean temTerraco = Boolean.parseBoolean(reader.readLine());
                 return new Apartamentos(tipoApt, numCasaBanho, numVaranda, temTerraco,
-                                     identificador, area, percentagemArea, localizacao);
+                        identificador, area, percentagemArea, localizacao);
+            }
 
-            case "LOJA":
+            case "LOJA" -> {
                 return new Lojas(identificador, area, percentagemArea, localizacao);
+            }
 
-            case "GARAGEM":
+            case "GARAGEM" -> {
                 int numViaturas = Integer.parseInt(reader.readLine());
                 boolean temLavagem = Boolean.parseBoolean(reader.readLine());
-                return new Garagens(numViaturas, temLavagem, identificador, area, 
-                                  percentagemArea, localizacao);
+                return new Garagens(numViaturas, temLavagem, identificador, area,
+                        percentagemArea, localizacao);
+            }
 
-            case "ARRECADACAO":
+            case "ARRECADACAO" -> {
                 boolean temPortaBlindada = Boolean.parseBoolean(reader.readLine());
-                return new Arrecadacao(temPortaBlindada, identificador, area, 
-                                     percentagemArea, localizacao);
+                return new Arrecadacao(temPortaBlindada, identificador, area,
+                        percentagemArea, localizacao);
+            }
 
-            default:
+            default -> {
                 System.out.println("Tipo de fração desconhecido: " + tipo);
                 return null;
+            }
         }
     }
 
+    // Método para carregar a lista de proprietários de um arquivo
     private static void carregarProprietarios(List<Proprietario> proprietarios) {
         try (BufferedReader reader = new BufferedReader(new FileReader(PROPRIETARIOS_FILE))) {
             String linha;
@@ -198,6 +206,7 @@ public class GestorArquivos {
         }
     }
 
+    // Método para carregar um proprietário de um arquivo
     private static void carregarProprietario(BufferedReader reader, List<Proprietario> proprietarios) throws IOException {
         String identificador = reader.readLine();
         String nome = reader.readLine();
@@ -216,12 +225,10 @@ public class GestorArquivos {
         
         for (int i = 0; i < numFracoes; i++) {
             String fracaoId = reader.readLine();
-            // Note: As frações reais serão associadas posteriormente no Main
-            // quando tivermos acesso a todas as frações carregadas
         }
 
         proprietarios.add(prop);
-        reader.readLine(); // Ler FIM_PROPRIETARIO
+        reader.readLine();
     }
 
 }

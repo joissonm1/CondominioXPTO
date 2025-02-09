@@ -17,6 +17,7 @@ public class Proprietario {
     private LocalDate dataNascimento;
     private List<Fracao> listaFracao;
 
+    // Construtor da classe Proprietario
     public Proprietario(String identificador, String nome, String morada, String telefone, String telemovel, String email, LocalDate dataNascimento) {
         if (identificador == null || identificador.trim().isEmpty()) {
             throw new IllegalArgumentException("O identificador não pode estar vazio.");
@@ -50,11 +51,12 @@ public class Proprietario {
         this.listaFracao = new ArrayList<>();
     }
 
-    // Getters and setters with validation
+    // Retorna o identificador do proprietário
     public String getIdentificador() {
         return identificador;
     }
 
+    // Define o identificador do proprietário
     public void setIdentificador(String identificador) {
         if (identificador == null || identificador.trim().isEmpty()) {
             throw new IllegalArgumentException("O identificador não pode estar vazio.");
@@ -62,10 +64,12 @@ public class Proprietario {
         this.identificador = identificador;
     }
 
+    // Retorna o nome do proprietário
     public String getNome() {
         return nome;
     }
 
+    // Define o nome do proprietário
     public void setNome(String nome) {
         if (nome == null || nome.trim().isEmpty()) {
             throw new IllegalArgumentException("O nome não pode estar vazio.");
@@ -73,10 +77,12 @@ public class Proprietario {
         this.nome = nome;
     }
 
+    // Retorna a morada do proprietário
     public String getMorada() {
         return morada;
     }
 
+    // Define a morada do proprietário
     public void setMorada(String morada) {
         if (morada == null || morada.trim().isEmpty()) {
             throw new IllegalArgumentException("A morada não pode estar vazia.");
@@ -84,10 +90,12 @@ public class Proprietario {
         this.morada = morada;
     }
 
+    // Retorna o telefone do proprietário
     public String getTelefone() {
         return telefone;
     }
 
+    // Define o telefone do proprietário
     public void setTelefone(String telefone) {
         if (!InputValidator.isValidPhoneNumber(telefone)) {
             throw new IllegalArgumentException("O telefone é inválido.");
@@ -95,10 +103,12 @@ public class Proprietario {
         this.telefone = telefone;
     }
 
+    // Retorna o telemóvel do proprietário
     public String getTelemovel() {
         return telemovel;
     }
 
+    // Define o telemóvel do proprietário
     public void setTelemovel(String telemovel) {
         if (!InputValidator.isValidPhoneNumber(telemovel)) {
             throw new IllegalArgumentException("O telemóvel é inválido.");
@@ -106,10 +116,12 @@ public class Proprietario {
         this.telemovel = telemovel;
     }
 
+    // Retorna o email do proprietário
     public String getEmail() {
         return email;
     }
 
+    // Define o email do proprietário
     public void setEmail(String email) {
         if (!InputValidator.isValidEmail(email)) {
             throw new IllegalArgumentException("O email é inválido.");
@@ -117,10 +129,12 @@ public class Proprietario {
         this.email = email;
     }
 
+    // Retorna a data de nascimento do proprietário
     public LocalDate getDataNascimento() {
         return dataNascimento;
     }
 
+    // Define a data de nascimento do proprietário
     public void setDataNascimento(LocalDate dataNascimento) {
         if (dataNascimento == null) {
             throw new IllegalArgumentException("A data de nascimento não pode estar vazia.");
@@ -128,10 +142,12 @@ public class Proprietario {
         this.dataNascimento = dataNascimento;
     }
 
+    // Retorna a lista de frações do proprietário
     public List<Fracao> getListaFracao() {
         return Collections.unmodifiableList(listaFracao);
     }
 
+    // Adiciona uma fração à lista do proprietário
     public void adicionarFracao(Fracao fracao) {
         if (fracao == null) {
             throw new IllegalArgumentException("A fração não pode ser nula.");
@@ -139,6 +155,7 @@ public class Proprietario {
         listaFracao.add(fracao);
     }
 
+    // Remove uma fração da lista do proprietário
     public void removerFracao(Fracao fracao) {
         if (fracao == null) {
             throw new IllegalArgumentException("A fração não pode ser nula.");
@@ -146,6 +163,7 @@ public class Proprietario {
         listaFracao.remove(fracao);
     }
 
+    // Lista as frações do proprietário
     public void listarFracao() {
         for (Fracao fracao : listaFracao) {
             System.out.println(fracao.getIdentificador());

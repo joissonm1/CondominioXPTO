@@ -41,6 +41,7 @@ public class Main {
         finalizarSistema();
     }
 
+    //Metodo para iniciar o Sistema
     private static void inicializarSistema() {
         condominios = new ArrayList<>();
         proprietarios = new ArrayList<>();
@@ -49,12 +50,14 @@ public class Main {
         System.out.println("Sistema inicializado com sucesso!");
     }
 
+    //Metodo para finalizar o Sistema(salva os dados)
     private static void finalizarSistema() {
         GestorArquivos.salvarDados(condominios, proprietarios);
         System.out.println("\nDados salvos com sucesso!");
         System.out.println("Sistema finalizado. Até logo!");
     }
 
+    //Menu Principal
     private static void exibirMenuPrincipal() {
         System.out.println("\n=== GESTÃO DE CONDOMÍNIO XPTO ===");
         System.out.println("1. Gestão de Condomínios");
@@ -64,6 +67,7 @@ public class Main {
         System.out.println("5. Salvar e Sair");
     }
 
+    //Menu do Condominio
     private static void menuCondominios() {
         while (true) {
             System.out.println("\n=== GESTÃO DE CONDOMÍNIOS ===");
@@ -90,12 +94,31 @@ public class Main {
         }
     }
 
+    //Metodo para adicionar Condominio
     private static void adicionarCondominio() {
         System.out.println("\n=== ADICIONAR CONDOMÍNIO ===");
-        
+
         try {
             String morada = InputValidator.getInput("Digite a morada do condomínio: ");
-            int identificador = InputValidator.getValidInt("Digite o identificador do condomínio: ");
+            int identificador;
+
+            while (true) {
+                identificador = InputValidator.getValidInt("Digite o identificador do condomínio: ");
+
+                boolean identificadorExiste = false;
+                for (Condominio cond : condominios) {
+                    if (cond.getIdentificador() == identificador) {
+                        identificadorExiste = true;
+                        System.out.println("Erro: Identificador de condomínio já existe! Tente novamente.");
+                        break;
+                    }
+                }
+
+                if (!identificadorExiste) {
+                    break;
+                }
+            }
+
             double despesasGerais = InputValidator.getValidDouble("Digite o valor das despesas gerais: ");
             double despesasElevador = InputValidator.getValidDouble("Digite o valor das despesas com elevador: ");
             LocalDate dataConstrucao = InputValidator.getValidConstrucaoData("Digite a data de construção (AAAA-MM-DD): ");
@@ -110,6 +133,7 @@ public class Main {
         }
     }
 
+    //Metodo para Remover condominio
     private static void removerCondominio() {
         if (condominios.isEmpty()) {
             System.out.println("Não existem condomínios cadastrados!");
@@ -135,6 +159,7 @@ public class Main {
         }
     }
 
+    //Faz a listagem dos condominios
     private static void listarCondominios() {
         if (condominios.isEmpty()) {
             System.out.println("Não existem condomínios cadastrados!");
@@ -150,6 +175,7 @@ public class Main {
         }
     }
 
+    //Altera as despesas
     private static void modificarDespesas() {
         if (condominios.isEmpty()) {
             System.out.println("Não existem condomínios cadastrados!");
@@ -187,6 +213,7 @@ public class Main {
         }
     }
 
+    //Apresenta os detalhes do condominio
     private static void verDetalhesCondominio() {
         if (condominios.isEmpty()) {
             System.out.println("Não existem condomínios cadastrados!");
@@ -227,6 +254,8 @@ public class Main {
             System.out.println("Condomínio não encontrado!");
         }
     }
+    
+    //Menu das Fracoes do Sistema
     private static void menuFracoes() {
         while (true) {
             System.out.println("\n=== GESTÃO DE FRAÇÕES ===");
@@ -251,6 +280,7 @@ public class Main {
         }
     }
     
+    //Adiciona Fracao
    private static void adicionarFracao() {
     if (condominios.isEmpty()) {
         System.out.println("Não existem condomínios cadastrados! Crie um condomínio primeiro.");
@@ -289,6 +319,13 @@ public class Main {
     int tipoFracao = InputValidator.getValidInt("Escolha o tipo de fração: ");
     
     String identificador = InputValidator.getInput("Digite o identificador da fração: ");
+    
+    for (Fracao fracao : cond.getListaFracao()) {
+        if (fracao.getIdentificador().equals(String.valueOf(identificador))) {
+            System.out.println("Erro: Identificador de fração já existe!");
+            return;
+        }
+    }
     double area = InputValidator.getValidDouble("Digite a área da fração: ");
     String localizacao = InputValidator.getInput("Digite a localização da fração: ");
 
@@ -343,7 +380,7 @@ public class Main {
     }
 }
 
-
+   //Responsavel por remover uma Fracao
     private static void removerFracao() {
         if (condominios.isEmpty()) {
             System.out.println("Não existem condomínios cadastrados!");
@@ -382,6 +419,7 @@ public class Main {
         System.out.println("Fração removida com sucesso!");
     }
 
+    //Lista as Fracoes
     private static void listarFracoes() {
         if (condominios.isEmpty()) {
             System.out.println("Não existem condomínios cadastrados!");
@@ -405,6 +443,7 @@ public class Main {
         }
     }
 
+    //Apresenta de maneira detalhada cada Fracao
     private static void verDetalhesFracao() {
         if (condominios.isEmpty()) {
             System.out.println("Não existem condomínios cadastrados!");
@@ -473,6 +512,7 @@ public class Main {
         System.out.println("Fração não encontrada!");
     }
     
+    //Apresenta o menu do Proprietario
     private static void menuProprietarios() {
         while (true) {
             System.out.println("\n=== GESTÃO DE PROPRIETÁRIOS ===");
@@ -499,6 +539,7 @@ public class Main {
         }
     }
 
+    //Metodo para adicionar Proprietarios
     private static void adicionarProprietario() {
         System.out.println("\n=== ADICIONAR PROPRIETÁRIO ===");
         
@@ -521,6 +562,7 @@ public class Main {
         }
     }
 
+    //Remove Proprietario do Sistema
     private static void removerProprietario() {
         if (proprietarios.isEmpty()) {
             System.out.println("Não existem proprietários cadastrados!");
@@ -546,6 +588,7 @@ public class Main {
         }
     }
 
+    //Faz a listagem dos proprietarios
     private static void listarProprietarios() {
         if (proprietarios.isEmpty()) {
             System.out.println("Não existem proprietários cadastrados!");
@@ -562,6 +605,7 @@ public class Main {
         }
     }
 
+    //Adiciona Fracao ao Proprietario escolhido
     private static void associarFracaoProprietario() {
         if (proprietarios.isEmpty()) {
             System.out.println("Não existem proprietários cadastrados!");
@@ -610,6 +654,7 @@ public class Main {
         System.out.println("Fração não encontrada!");
     }
 
+    //Mostra detalhadamente cada Proprietario
     private static void verDetalhesProprietario() {
         if (proprietarios.isEmpty()) {
             System.out.println("Não existem proprietários cadastrados!");
@@ -647,6 +692,7 @@ public class Main {
         System.out.println("Proprietário não encontrado!");
     }
 
+    //Apresenta todas as Fracoes disponiveis
     private static void listarFracoesDisponiveis() {
         System.out.println("\n=== FRAÇÕES DISPONÍVEIS ===");
         for (Condominio c : condominios) {
@@ -664,6 +710,7 @@ public class Main {
         }
     }
     
+    //Apresenta o menu dos relatorios
     private static void menuRelatorios() {
         while (true) {
             System.out.println("\n=== RELATÓRIOS ===");
@@ -686,6 +733,7 @@ public class Main {
         }
     }
 
+    //Verifica a percentagem
     private static void verificarPercentagens() {
         if (condominios.isEmpty()) {
             System.out.println("Não existem condomínios cadastrados!");
@@ -730,6 +778,7 @@ public class Main {
         }
     }
 
+    //Faz o Calculo das quotas Mensais dos condominios
     private static void calcularQuotasMensais() {
         if (condominios.isEmpty()) {
             System.out.println("Não existem condomínios cadastrados!");
@@ -779,6 +828,7 @@ public class Main {
                          cond.getTotalDespesasGerais() + cond.getTotalDespesasElevador());
     }
 
+    //Lista as Fracoes por tipo
     private static void listarFracoesPorTipo() {
         if (condominios.isEmpty()) {
             System.out.println("Não existem condomínios cadastrados!");
@@ -849,6 +899,4 @@ public class Main {
         System.out.println("Total de Frações: " + 
                           (totalApartamentos + totalLojas + totalGaragens + totalArrecadacoes));
     }
-    
-
 }

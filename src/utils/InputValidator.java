@@ -10,11 +10,13 @@ public class InputValidator {
 
     private static final Scanner scanner = new Scanner(System.in);
 
+    // Obtém uma entrada de texto do usuário
     public static String getInput(String prompt) {
         System.out.print(prompt);
         return scanner.nextLine();
     }
 
+    // Obtém um número inteiro válido do usuário
     public static int getValidInt(String prompt) {
         while (true) {
             System.out.print(prompt);
@@ -31,6 +33,7 @@ public class InputValidator {
         }
     }
 
+    // Obtém um número decimal válido do usuário
     public static double getValidDouble(String prompt) {
         while (true) {
             System.out.print(prompt);
@@ -47,6 +50,7 @@ public class InputValidator {
         }
     }
 
+    // Obtém uma percentagem válida do usuário
     public static double getValidPercentage(String prompt) {
         while (true) {
             double value = getValidDouble(prompt);
@@ -58,6 +62,7 @@ public class InputValidator {
         }
     }
 
+    // Obtém um número de telefone válido do usuário
     public static String getValidPhoneNumber(String prompt) {
         while (true) {
             System.out.print(prompt);
@@ -70,6 +75,7 @@ public class InputValidator {
         }
     }
 
+    // Obtém um email válido do usuário
     public static String getValidEmail(String prompt) {
         while (true) {
             System.out.print(prompt);
@@ -82,68 +88,67 @@ public class InputValidator {
         }
     }
 
-public static LocalDate getValidNascimentoData(String prompt) {
-    DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
-    DateTimeFormatter displayFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    
-    while (true) {
-        System.out.print(prompt);
-        String dateStr = scanner.nextLine().trim();
+    // Obtém uma data de nascimento válida do usuário
+    public static LocalDate getValidNascimentoData(String prompt) {
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
+        DateTimeFormatter displayFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         
-        try {
-            LocalDate date = LocalDate.parse(dateStr, formatter);
-            LocalDate hoje = LocalDate.now();
+        while (true) {
+            System.out.print(prompt);
+            String dateStr = scanner.nextLine().trim();
             
-            // Validação para data de nascimento (mínimo 18 anos)
-            LocalDate dataMinimaNascimento = hoje.minusYears(18);
-            if (date.isAfter(dataMinimaNascimento)) {
-                System.out.println("Erro: Data de nascimento deve ser anterior a " + 
-                    dataMinimaNascimento.format(displayFormatter));
-                continue;
+            try {
+                LocalDate date = LocalDate.parse(dateStr, formatter);
+                LocalDate hoje = LocalDate.now();
+                
+                // Validação para data de nascimento (mínimo 18 anos)
+                LocalDate dataMinimaNascimento = hoje.minusYears(18);
+                if (date.isAfter(dataMinimaNascimento)) {
+                    System.out.println("Erro: Data de nascimento deve ser anterior a " + 
+                        dataMinimaNascimento.format(displayFormatter));
+                    continue;
+                }
+                
+                // Validação para idade máxima (120 anos)
+                LocalDate dataMaximaAntiga = hoje.minusYears(120);
+                if (date.isBefore(dataMaximaAntiga)) {
+                    System.out.println("Erro: Data de nascimento não pode ser anterior a " + 
+                        dataMaximaAntiga.format(displayFormatter));
+                    continue;
+                }
+                
+                return date;
+            } catch (DateTimeParseException e) {
+                System.out.println("Formato inválido! Use: AAAA-MM-DD (Ex: 2000-05-30)");
             }
-            
-            // Validação para idade máxima (120 anos)
-            LocalDate dataMaximaAntiga = hoje.minusYears(120);
-            if (date.isBefore(dataMaximaAntiga)) {
-                System.out.println("Erro: Data de nascimento não pode ser anterior a " + 
-                    dataMaximaAntiga.format(displayFormatter));
-                continue;
-            }
-            
-            return date;
-        } catch (DateTimeParseException e) {
-            System.out.println("Formato inválido! Use: AAAA-MM-DD (Ex: 2000-05-30)");
         }
     }
-}
 
-public static LocalDate getValidConstrucaoData(String prompt) {
-    DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
-    DateTimeFormatter displayFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    
-    while (true) {
-        System.out.print(prompt);
-        String dateStr = scanner.nextLine().trim();
+    // Obtém uma data de construção válida do usuário
+    public static LocalDate getValidConstrucaoData(String prompt) {
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
+        DateTimeFormatter displayFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         
-        try {
-            LocalDate date = LocalDate.parse(dateStr, formatter);
-            LocalDate hoje = LocalDate.now();
+        while (true) {
+            System.out.print(prompt);
+            String dateStr = scanner.nextLine().trim();
             
-            // Validação: a data de construção deve ser no futuro (apenas datas após hoje são permitidas)
-            if (!date.isAfter(hoje)) {
-                System.out.println("Erro: Data de construção tem que ser no futuro. Por favor, insira uma data após " +
-                    hoje.format(displayFormatter));
-                continue;
+            try {
+                LocalDate date = LocalDate.parse(dateStr, formatter);
+                LocalDate hoje = LocalDate.now();
+                if (!date.isAfter(hoje)) {
+                    System.out.println("Erro: Data de construção tem que ser no futuro. Por favor, insira uma data após " +
+                        hoje.format(displayFormatter));
+                    continue;
+                }
+                return date;
+            } catch (DateTimeParseException e) {
+                System.out.println("Formato inválido! Use: AAAA-MM-DD (Ex: 2000-05-30)");
             }
-            
-            return date;
-        } catch (DateTimeParseException e) {
-            System.out.println("Formato inválido! Use: AAAA-MM-DD (Ex: 2000-05-30)");
         }
     }
-}
 
-
+    // Obtém um tipo de fração válido do usuário
     public static String getValidFracaoType(String prompt) {
         while (true) {
             System.out.print(prompt);
@@ -156,6 +161,7 @@ public static LocalDate getValidConstrucaoData(String prompt) {
         }
     }
 
+    // Obtém um tipo de apartamento válido do usuário
     public static String getValidApartmentType(String prompt) {
         while (true) {
             System.out.print(prompt);
@@ -168,6 +174,7 @@ public static LocalDate getValidConstrucaoData(String prompt) {
         }
     }
 
+    // Obtém um valor booleano válido do usuário
     public static boolean getValidBoolean(String prompt) {
         while (true) {
             System.out.print(prompt);
@@ -180,10 +187,12 @@ public static LocalDate getValidConstrucaoData(String prompt) {
         }
     }
 
+    // Verifica se um número de telefone é válido
     public static boolean isValidPhoneNumber(String phoneNumber) {
         return phoneNumber != null && phoneNumber.matches("^9\\d{8}$");
     }
 
+    // Verifica se um email é válido
     public static boolean isValidEmail(String email) {
         return email != null && Pattern.compile("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$").matcher(email).matches();
     }

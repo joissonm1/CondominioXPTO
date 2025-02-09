@@ -14,6 +14,7 @@ public class Condominio {
     private int maxFracoes;
     private List<Fracao> listaFracao;
 
+    // Construtor da classe Condominio
     public Condominio(String morada, int identificador, double totalDespesasGerais, double totalDespesasElevador, LocalDate dataConstrucao, int maxFracoes) {
         if (morada == null || morada.trim().isEmpty()) {
             throw new IllegalArgumentException("A morada não pode estar vazia.");
@@ -44,10 +45,12 @@ public class Condominio {
         this.listaFracao = new ArrayList<>();
     }
 
+    // Retorna a morada do condomínio
     public String getMorada() {
         return morada;
     }
 
+    // Define a morada do condomínio
     public void setMorada(String morada) {
         if (morada == null || morada.trim().isEmpty()) {
             throw new IllegalArgumentException("A morada não pode estar vazia.");
@@ -55,10 +58,12 @@ public class Condominio {
         this.morada = morada;
     }
 
+    // Retorna o identificador do condomínio
     public int getIdentificador() {
         return identificador;
     }
 
+    // Define o identificador do condomínio
     public void setIdentificador(int identificador) {
         if (identificador <= 0) {
             throw new IllegalArgumentException("O identificador deve ser maior que zero.");
@@ -66,10 +71,12 @@ public class Condominio {
         this.identificador = identificador;
     }
 
+    // Retorna o total de despesas gerais
     public double getTotalDespesasGerais() {
         return totalDespesasGerais;
     }
 
+    // Define o total de despesas gerais
     public void setTotalDespesasGerais(double totalDespesasGerais) {
         if (totalDespesasGerais < 0) {
             throw new IllegalArgumentException("As despesas gerais não podem ser negativas.");
@@ -77,10 +84,12 @@ public class Condominio {
         this.totalDespesasGerais = totalDespesasGerais;
     }
 
+    // Retorna o total de despesas do elevador
     public double getTotalDespesasElevador() {
         return totalDespesasElevador;
     }
 
+    // Define o total de despesas do elevador
     public void setTotalDespesasElevador(double totalDespesasElevador) {
         if (totalDespesasElevador < 0) {
             throw new IllegalArgumentException("As despesas do elevador não podem ser negativas.");
@@ -88,10 +97,12 @@ public class Condominio {
         this.totalDespesasElevador = totalDespesasElevador;
     }
 
+    // Retorna a data de construção do condomínio
     public LocalDate getDataConstrucao() {
         return dataConstrucao;
     }
 
+    // Define a data de construção do condomínio
     public void setDataConstrucao(LocalDate dataConstrucao) {
         if (dataConstrucao == null) {
             throw new IllegalArgumentException("A data de construção não pode estar vazia.");
@@ -102,18 +113,22 @@ public class Condominio {
         this.dataConstrucao = dataConstrucao;
     }
 
+    // Retorna o número de frações
     public int getNumeroFracoes() {
         return listaFracao.size();
     }
 
+    // Retorna o número máximo de frações
     public int getMaxFracoes() {
         return maxFracoes;
     }
 
+    // Retorna a lista de frações
     public List<Fracao> getListaFracao() {
         return listaFracao;
     }
 
+    // Define a lista de frações
     public void setListaFracao(List<Fracao> listaFracao) {
         if (listaFracao == null) {
             throw new IllegalArgumentException("A lista de frações não pode ser nula.");
@@ -121,6 +136,7 @@ public class Condominio {
         this.listaFracao = listaFracao;
     }
 
+    // Adiciona uma fração ao condomínio
     public void adicionarFracao(Fracao fracao) {
         if (fracao == null) {
             throw new IllegalArgumentException("A fração não pode ser nula.");
@@ -132,11 +148,13 @@ public class Condominio {
         recalcularPercentagens();
     }
 
+    // Remove uma fração do condomínio
     public void removerFracao(String identificador) {
         listaFracao.removeIf(fracao -> fracao.getIdentificador().equals(identificador));
         recalcularPercentagens();
     }
 
+    // Recalcula as percentagens das frações
     private void recalcularPercentagens() {
         double areaTotal = listaFracao.stream().mapToDouble(Fracao::getArea).sum();
         for (Fracao fracao : listaFracao) {
@@ -144,15 +162,18 @@ public class Condominio {
         }
     }
 
+    // Verifica se as percentagens das frações somam 100%
     public boolean verificarPercentagens() {
         double somaPercentagens = listaFracao.stream().mapToDouble(Fracao::getPercentagemArea).sum();
         return Math.abs(somaPercentagens - 100.0) < 0.001;
     }
 
+    // Calcula a soma das quotas mensais
     public double calcularSomaQuotasMensais() {
         return listaFracao.stream().mapToDouble(fracao -> fracao.calcularQuotaMensal(totalDespesasGerais, totalDespesasElevador)).sum();
     }
 
+    // Exibe informações do condomínio
     public void infoCondominio() {
         System.out.println("Morada: " + morada);
         System.out.println("Identificador: " + identificador);
