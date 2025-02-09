@@ -327,7 +327,15 @@ public class Main {
         }
     }
     double area = InputValidator.getValidDouble("Digite a área da fração: ");
-    String localizacao = InputValidator.getInput("Digite a localização da fração: ");
+    String localizacao;
+    while (true) {
+        localizacao = InputValidator.getInput("Digite a localização da fração: ");
+        if (localizacao.equalsIgnoreCase(cond.getMorada())) {
+            break;
+        } else {
+            System.out.println("A localização deve ser a mesma que a do condomínio. Digite novamente.");
+        }
+    }
 
     try {
         Fracao novaFracao = null;
@@ -544,8 +552,32 @@ public class Main {
         System.out.println("\n=== ADICIONAR PROPRIETÁRIO ===");
         
         try {
-            String identificador = InputValidator.getInput("Digite o identificador do proprietário: ");
-            String nome = InputValidator.getInput("Digite o nome do proprietário: ");
+            String identificador;
+            while (true) {
+                identificador = InputValidator.getInput("Digite o identificador do proprietário: ");
+                boolean identificadorExiste = false;
+                for (Proprietario p : proprietarios) {
+                    if (p.getIdentificador().equals(identificador)) {
+                        identificadorExiste = true;
+                        System.out.println("Erro: Identificador de proprietário já existe! Tente novamente.");
+                        break;
+                    }
+                }
+                if (!identificadorExiste) {
+                    break;
+                }
+            }
+
+            String nome;
+            while (true) {
+                nome = InputValidator.getInput("Digite o nome do proprietário: ");
+                if (nome.matches(".*\\d.*")) {
+                    System.out.println("Erro: O nome do proprietário não pode conter números! Tente novamente.");
+                } else {
+                    break;
+                }
+            }
+
             String morada = InputValidator.getInput("Digite a morada do proprietário: ");
             String telefone = InputValidator.getValidPhoneNumber("Digite o telefone do proprietário: ");
             String telemovel = InputValidator.getValidPhoneNumber("Digite o telemóvel do proprietário: ");
@@ -607,52 +639,75 @@ public class Main {
 
     //Adiciona Fracao ao Proprietario escolhido
     private static void associarFracaoProprietario() {
-        if (proprietarios.isEmpty()) {
-            System.out.println("Não existem proprietários cadastrados!");
-            return;
-        }
-
-        if (condominios.isEmpty()) {
-            System.out.println("Não existem condomínios cadastrados!");
-            return;
-        }
-
-        listarProprietarios();
-        String idProp = InputValidator.getInput("Digite o identificador do proprietário: ");
-        
-        Proprietario prop = null;
-        for (Proprietario p : proprietarios) {
-            if (p.getIdentificador().equals(idProp)) {
-                prop = p;
-                break;
-            }
-        }
-
-        if (prop == null) {
-            System.out.println("Proprietário não encontrado!");
-            return;
-        }
-
-        listarFracoesDisponiveis();
-        String idFracao = InputValidator.getInput("Digite o identificador da fração a associar: ");
-
-        // Buscar a fração em todos os condomínios
-        for (Condominio c : condominios) {
-            for (Fracao f : c.getListaFracao()) {
-                if (f.getIdentificador().equals(idFracao)) {
-                    try {
-                        prop.adicionarFracao(f);
-                        System.out.println("Fração associada com sucesso!");
-                        return;
-                    } catch (IllegalArgumentException e) {
-                        System.out.println("Erro ao associar fração: " + e.getMessage());
-                        return;
-                    }
-                }
-            }
-        }
-        System.out.println("Fração não encontrada!");
+    if (proprietarios.isEmpty()) {
+        System.out.println("Não existem proprietários cadastrados!");
+        return;
     }
+
+    if (condominios.isEmpty()) {
+        System.out.println("Não existem condomínios cadastrados!");
+        return;
+    }
+
+    listarProprietarios();
+    String idProp = InputValidator.getInput("Digite o identificador do proprietário: ");
+    
+    Proprietario prop = null;
+    for (Proprietario p : proprietarios) {
+        if (p.getIdentificador().equals(idProp)) {
+            prop = p;
+            break;
+        }
+    }
+
+    if (prop == null) {
+        System.out.println("Proprietário não encontrado!");
+        return;
+    }
+
+    listarCondominios();
+    int idCond = InputValidator.getValidInt("Digite o identificador do condomínio: ");
+    
+    Condominio cond = null;
+    for (Condominio c : condominios) {
+        if (c.getIdentificador() == idCond) {
+            cond = c;
+            break;
+        }
+    }
+
+    if (cond == null) {
+        System.out.println("Condomínio não encontrado!");
+        return;
+    }
+
+    if (cond.getListaFracao().isEmpty()) {
+        System.out.println("Não existem frações neste condomínio!");
+        return;
+    }
+
+    System.out.println("\nFrações do Condomínio:");
+    for (Fracao f : cond.getListaFracao()) {
+        System.out.println("ID: " + f.getIdentificador() + " - Tipo: " + 
+                         f.getClass().getSimpleName());
+    }
+
+    String idFracao = InputValidator.getInput("Digite o identificador da fração: ");
+    
+    for (Fracao f : cond.getListaFracao()) {
+        if (f.getIdentificador().equals(idFracao)) {
+            try {
+                prop.adicionarFracao(f);
+                System.out.println("Fração associada com sucesso!");
+                return;
+            } catch (IllegalArgumentException e) {
+                System.out.println("Erro ao associar fração: " + e.getMessage());
+                return;
+            }
+        }
+    }
+    System.out.println("Fração não encontrada!");
+}
 
     //Mostra detalhadamente cada Proprietario
     private static void verDetalhesProprietario() {
