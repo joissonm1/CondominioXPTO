@@ -10,7 +10,6 @@ public class Condominio {
     private double totalDespesasGerais;
     private double totalDespesasElevador;
     private LocalDate dataConstrucao;
-    private int numeroFracoes;
     private int maxFracoes;
     private List<Fracao> listaFracao;
 

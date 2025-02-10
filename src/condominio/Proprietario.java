@@ -1,6 +1,5 @@
 package condominio;
 
-import condominio.Fracao;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;

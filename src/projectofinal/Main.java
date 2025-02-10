@@ -11,7 +11,6 @@ import java.io.UnsupportedEncodingException;
 public class Main {
     private static List<Condominio> condominios;
     private static List<Proprietario> proprietarios;
-    private static InputValidator input;
 
     public static void main(String[] args) {
         try {
@@ -45,7 +44,7 @@ public class Main {
     private static void inicializarSistema() {
         condominios = new ArrayList<>();
         proprietarios = new ArrayList<>();
-        input = new InputValidator();
+        new InputValidator();
         GestorArquivos.carregarDados(condominios, proprietarios);
         System.out.println("Sistema inicializado com sucesso!");
     }
@@ -500,18 +499,15 @@ public class Main {
 
                
                 // Detalhes específicos por tipo
-                if (f instanceof Apartamentos) {
-                    Apartamentos apt = (Apartamentos) f;
+                if (f instanceof Apartamentos apt) {
                     System.out.println("Tipo de Apartamento: " + apt.getTipo());
                     System.out.println("Número de Casas de Banho: " + apt.getNumCasaDeBanho());
                     System.out.println("Número de Varandas: " + apt.getNumVaranda());
                     System.out.println("Tem Terraço: " + apt.isTemTerraco());
-                } else if (f instanceof Garagens) {
-                    Garagens gar = (Garagens) f;
+                } else if (f instanceof Garagens gar) {
                     System.out.println("Número de Viaturas: " + gar.getNumViaturas());
                     System.out.println("Tem Lavagem: " + gar.isTemLavagem());
-                } else if (f instanceof Arrecadacao) {
-                    Arrecadacao arr = (Arrecadacao) f;
+                } else if (f instanceof Arrecadacao arr) {
                     System.out.println("Tem Porta Blindada: " + arr.isTemPortaBlindada());
                 }
                 return;
@@ -745,24 +741,6 @@ public class Main {
             }
         }
         System.out.println("Proprietário não encontrado!");
-    }
-
-    //Apresenta todas as Fracoes disponiveis
-    private static void listarFracoesDisponiveis() {
-        System.out.println("\n=== FRAÇÕES DISPONÍVEIS ===");
-        for (Condominio c : condominios) {
-            System.out.println("\nCondomínio: " + c.getIdentificador() + " - " + c.getMorada());
-            if (c.getListaFracao().isEmpty()) {
-                System.out.println("Não existem frações neste condomínio.");
-            } else {
-                for (Fracao f : c.getListaFracao()) {
-                    System.out.println("- ID: " + f.getIdentificador() + 
-                                     " | Tipo: " + f.getClass().getSimpleName() +
-                                     " | Área: " + f.getArea() + "m²");
-                }
-            }
-            System.out.println("------------------------");
-        }
     }
     
     //Apresenta o menu dos relatorios

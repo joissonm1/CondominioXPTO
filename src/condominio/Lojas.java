@@ -1,7 +1,5 @@
 package condominio;
 
-import condominio.Fracao;
-
 public class Lojas extends Fracao {
 
     // Construtor da classe Lojas

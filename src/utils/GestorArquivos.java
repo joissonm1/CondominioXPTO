@@ -3,13 +3,11 @@ package utils;
 import condominio.*;
 import java.io.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 public class GestorArquivos {
     private static final String CONDOMINIOS_FILE = "data/condominios.txt";
     private static final String PROPRIETARIOS_FILE = "data/proprietarios.txt";
-    private static final String FRACOES_FILE = "data/fracoes.txt";
 
     // Método para salvar todos os dados
     public static void salvarDados(List<Condominio> condominios, List<Proprietario> proprietarios) {
