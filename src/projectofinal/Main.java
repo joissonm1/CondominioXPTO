@@ -692,6 +692,14 @@ public class Main {
     
     for (Fracao f : cond.getListaFracao()) {
         if (f.getIdentificador().equals(idFracao)) {
+            // Verificar se a fração já está associada a um proprietário
+            for (Proprietario p : proprietarios) {
+                if (p.getListaFracao().contains(f)) {
+                    System.out.println("Erro: Esta fração já está associada ao proprietário " + p.getIdentificador());
+                    return;
+                }
+            }
+
             try {
                 prop.adicionarFracao(f);
                 System.out.println("Fração associada com sucesso!");

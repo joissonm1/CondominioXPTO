@@ -1,0 +1,10 @@
+PROPRIETARIO
+100
+Joisson
+Benfica
+936390379
+999999999
+josson.miguel@fonsi.com
+2004-05-03
+FRACOES:0
+FIM_PROPRIETARIO
